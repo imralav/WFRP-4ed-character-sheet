@@ -17,10 +17,12 @@
 </script>
 
 <style lang="scss">
+  @import url('https://fonts.googleapis.com/css?family=Dosis:400,700');
   * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    font-family: 'Dosis', sans-serif;
   }
   #container {
     display: flex;

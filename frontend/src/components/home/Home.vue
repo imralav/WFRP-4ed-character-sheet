@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <div>
-      <router-link to="/creator">Create new character here</router-link>
-      <router-link to="/login">Login in to use one of your previous characters</router-link>
-    </div>
+  <div class="wrapper">
+      <module-link to="/creator">Create new character here</module-link>
+      <module-link to="/login">Log in in to use one of your previous characters</module-link>
   </div>
 </template>
 
@@ -17,3 +15,11 @@
     },
   };
 </script>
+
+<style lang="scss" scoped>
+  .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+</style>
