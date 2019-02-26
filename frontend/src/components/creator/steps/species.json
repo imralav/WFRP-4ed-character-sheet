@@ -1,0 +1,22 @@
+{
+  "human": {
+    "name": "Human",
+    "info": "info1"
+  },
+  "halfling": {
+    "name": "Halfling",
+    "info": "info2"
+  },
+  "dwarf": {
+    "name": "Dwarf",
+    "info": "info3"
+  },
+  "highElf": {
+    "name": "High Elf",
+    "info": "info4"
+  },
+  "woodElf": {
+    "name": "Wood Elf",
+    "info": "info5"
+  }
+}

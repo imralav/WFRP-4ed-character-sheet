@@ -2,10 +2,14 @@
   <div class="creator-wrapper">
     <div class="content-wrapper">
       <div class="main-content-wrapper">
-        <component :is="currentStep"></component>
+        <keep-alive>
+          <component :is="currentStep" @next-step="nextStep" v-model="characterSheet.species"
+                     @update-info="updateInfo"></component>
+        </keep-alive>
       </div>
-      <div class="info-wrapper">
-        <p>extra info about currently hovered/active option</p>
+      <div class="info-wrapper" v-if="currentInfo">
+        <div class="info-content" v-html="currentInfo">
+        </div>
       </div>
     </div>
     <div class="step-tracker-wrapper">
@@ -16,25 +20,33 @@
 </template>
 
 <script>
-  import Species from './steps/Species';
-  import Name from './steps/Name';
+import Species from './steps/Species';
+import Name from './steps/Name';
 
-  export default {
-    name: 'creator',
-    data: function() {
-      return {
-        currentStep: Species,
-        allSteps: [Species, Name],
-      };
+export default {
+  name: 'creator',
+  data: function () {
+    return {
+      currentStep: Species,
+      allSteps: [Species, Name],
+      currentInfo: '',
+      characterSheet: {
+        species: ''
+      },
+    };
+  },
+  methods: {
+    nextStep: function () {
+      const currentStepIndex = this.allSteps.indexOf(this.currentStep);
+      const nextStepIndex = currentStepIndex + 1;
+      this.currentStep = this.allSteps[nextStepIndex % this.allSteps.length];
+      this.currentInfo = '';
     },
-    methods: {
-      nextStep: function() {
-        const currentStepIndex = this.allSteps.indexOf(this.currentStep);
-        const nextStepIndex = currentStepIndex + 1;
-        this.currentStep = this.allSteps[nextStepIndex%this.allSteps.length];
-      }
+    updateInfo: function (newInfo) {
+      this.currentInfo = newInfo;
     }
   }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -53,21 +65,31 @@
       @extend %bordered-section;
       display: flex;
       flex-grow: 1;
-
-      .main-content-wrapper {
-        flex-grow: 2;
-        flex-basis: 80%;
-      }
+      flex-wrap: wrap;
 
       .info-wrapper {
-        flex-grow: 0.5;
         @extend %bordered-section;
+        flex-grow: 1;
+        flex-basis: 20%;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+
+        .info-content {
+          display: inline-block;
+        }
+      }
+
+      .main-content-wrapper {
+        flex-grow: 1;
+        flex-basis: 80%;
       }
     }
 
     .step-tracker-wrapper {
-      margin-top: 5px;
       @extend %bordered-section;
+      margin-top: 5px;
       flex-grow: 0;
     }
   }
