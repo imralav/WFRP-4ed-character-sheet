@@ -1,7 +1,7 @@
 {
   "human": {
     "name": "Human",
-    "info": "info1"
+    "info": "Mankind, also called Men and sometimes Humans, are a race of intelligent, mammalian humanoids dominant in the Old World. The race of Men were one of the last intelligent peoples of the Warhammer World to become civilised. However, they are now one of the most powerful and populous species spread across the globe and might be considered the dominant intelligent race of the Warhammer World since the civilisations of the High Elves and the Dwarfs entered their mutual states of decline. Men are the chief devotees of the Imperial god Sigmar, as well as the primary opponent of Chaos' continued incursions into the Old World. In a severe grip of irony however, Mankind is also amongst the Dark Gods' greatest and most numerous servants."
   },
   "halfling": {
     "name": "Halfling",
@@ -9,7 +9,7 @@
   },
   "dwarf": {
     "name": "Dwarf",
-    "info": "info3"
+    "info": "The Dwarfs, or Dawi as they call themselves, are one of the oldest and proudest races in the Warhammer World,[1b] with a great wealth of history and power that stretches back since time immemorial.[2b] They once held an empire which stretched from Norsca in the north to the jungles in the south, and from Mount Silverspear in the east to the Grey Mountains in the west. But the heart of the Dwarfen realm, the Karaz Ankor as they call it, will always lie within the domains of the Worlds Edge Mountains.[1b] The highest mountain range in the world, it is filled with the magnificent halls and holds of the Dwarfen people, a testament to the great feats of engineering and power once wielded by this ancient civilisation.[1e]"
   },
   "highElf": {
     "name": "High Elf",

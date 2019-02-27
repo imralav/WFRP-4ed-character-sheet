@@ -2,8 +2,11 @@
   <div class="species-wrapper">
     <h1>Firstly, you need to select your species:</h1>
     <div class="species-selection-buttons">
-      <button @click="selectSpecies(raceName)" @mouseover="updateInfo(raceData.info)" v-bind:key="raceName"
-              v-for="(raceData, raceName) in species" v-bind:class="{selected: currentSpecies.name === raceData.name}">
+      <button @click="selectSpecies(raceName)"
+              @mouseover="updateInfo(raceData.info)"
+              v-bind:key="raceName"
+              v-for="(raceData, raceName) in species"
+              v-bind:class="{selected: currentSpecies.name === raceData.name}">
         {{raceData.name}}
       </button>
     </div>
@@ -13,14 +16,16 @@
       <h3>{{rollStatus}}</h3>
     </div>
     <div class="species-confirmation-wrapper">
-      <button @click="confirmSpeciesSelection()" :disabled="currentSpeciesNotSelected">I want to be a {{currentSpecies.name || '...'}}</button>
+      <button @click="confirmSpeciesSelection()" :disabled="currentSpeciesNotSelected">
+        I want to be a {{currentSpecies.name || '...'}}
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import species from './species.json';
-import roller from './../../dice/roller';
+import roller from '../../dice/roller';
 
 const rollSpeciesInfo = `
 <table>
@@ -51,7 +56,7 @@ const rollSpeciesInfo = `
 
 export default {
   name: 'species',
-  data: function () {
+  data() {
     return {
       currentSpecies: {},
       species,
@@ -60,24 +65,24 @@ export default {
     };
   },
   computed: {
-    currentSpeciesNotSelected: function() {
-        return Object.keys(this.currentSpecies).length === 0;
+    currentSpeciesNotSelected() {
+      return Object.keys(this.currentSpecies).length === 0;
     },
   },
   methods: {
-    selectSpecies: function (selectedSpecies) {
+    selectSpecies(selectedSpecies) {
       this.currentSpecies = this.species[selectedSpecies];
     },
-    confirmSpeciesSelection: function () {
+    confirmSpeciesSelection() {
       if (!this.currentSpeciesNotSelected) {
         this.$emit('input', this.currentSpecies);
         this.$emit('next-step');
       }
     },
-    updateInfo: function (info) {
+    updateInfo(info) {
       this.$emit('update-info', info);
     },
-    rollSpeciesOnce: function () {
+    rollSpeciesOnce() {
       this.rollStatus = 'Rolling...';
       const result = roller.rollDie(100);
       const newSpecies = this.selectSpeciesFromRoll(result);
@@ -85,21 +90,24 @@ export default {
       this.rollStatus = `(${result}) ${this.currentSpecies.name}`;
       this.updateInfo(this.currentSpecies.info);
     },
-    rollSpeciesContinuously: function (times) {
+    rollSpeciesContinuously(times) {
+      console.log(`Rolling ${times}`);
       this.updateInfo(this.currentSpecies.info);
     },
-    selectSpeciesFromRoll: function(roll) {
-      if(roll === 0) {
+    selectSpeciesFromRoll(roll) {
+      if (roll === 0) {
         return 'woodElf';
-      } else if(roll === 99) {
-        return 'highElf';
-      } else if(roll >= 1 && roll <= 90) {
-        return 'human';
-      } else if(roll >= 91 && roll <= 94) {
-        return 'halfling';
-      } else {
-        return 'dwarf';
       }
+      if (roll === 99) {
+        return 'highElf';
+      }
+      if (roll >= 1 && roll <= 90) {
+        return 'human';
+      }
+      if (roll >= 91 && roll <= 94) {
+        return 'halfling';
+      }
+      return 'dwarf';
     },
   },
 };
@@ -135,6 +143,7 @@ export default {
       margin: 10px;
       font-size: 20px;
       font-family: 'Dosis', sans-serif;
+      transition: all 0.2s ease-in;
 
       &:focus {
         outline: none;
@@ -144,6 +153,10 @@ export default {
         background-color: #efefef;
         border-color: #5a5a5a;
         box-shadow: -1px 0 5px #efcdd4, 0 1px #efcdd4, 1px 0 #efcdd4, 0 -1px #efcdd4;
+
+        &:not(.selected) {
+          transform: scale(1.05);
+        }
       }
 
       &:disabled {
@@ -152,6 +165,7 @@ export default {
 
       &.selected {
         box-shadow: -1px 0 5px #8d1a25, 0 1px #8d1a25, 1px 0 #8d1a25, 0 -1px #8d1a25;
+        transform: scale(1.1);
       }
     }
 
