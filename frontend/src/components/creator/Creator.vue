@@ -55,7 +55,7 @@ export default {
 
 <style lang="scss" scoped>
   %bordered-section {
-    border: 1px solid #121212;
+    border: 1px solid #e4e4e4;
     border-radius: 15px;
     padding: 5px;
   }

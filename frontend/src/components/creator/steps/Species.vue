@@ -12,7 +12,7 @@
     </div>
     <h2>or roll a die and let the destiny make the choice for you:</h2>
     <div class="species-roll-wrapper">
-      <button @click="rollSpeciesOnce" @mouseover="updateInfo(rollSpeciesInfo)">Roll</button>
+      <button @click="rollSpeciesContinuously(80)" @mouseover="updateInfo(rollSpeciesInfo)">Roll</button>
       <h3>{{rollStatus}}</h3>
     </div>
     <div class="species-confirmation-wrapper">
@@ -62,6 +62,8 @@ export default {
       species,
       rollSpeciesInfo,
       rollStatus: '',
+      maxRollTime: 100,
+      minRollTime: 10,
     };
   },
   computed: {
@@ -90,12 +92,23 @@ export default {
       this.rollStatus = `(${result}) ${this.currentSpecies.name}`;
       this.updateInfo(this.currentSpecies.info);
     },
+    computeCurrentRollInterval(rollsLeft, totalRolls) {
+      return this.minRollTime + (this.maxRollTime - this.minRollTime) * (totalRolls - rollsLeft) / totalRolls;
+    },
+    rollSpeciesOnceRecursive(rollsLeft, totalRolls) {
+      if (rollsLeft > 0) {
+        this.rollSpeciesOnce();
+        setTimeout(() => {
+          this.rollSpeciesOnceRecursive(--rollsLeft, totalRolls);
+        }, this.computeCurrentRollInterval(rollsLeft, totalRolls));
+      }
+    },
     rollSpeciesContinuously(times) {
-      console.log(`Rolling ${times}`);
+      this.rollSpeciesOnceRecursive(times, times);
       this.updateInfo(this.currentSpecies.info);
     },
     selectSpeciesFromRoll(roll) {
-      if (roll === 0) {
+      if (roll === 100) {
         return 'woodElf';
       }
       if (roll === 99) {

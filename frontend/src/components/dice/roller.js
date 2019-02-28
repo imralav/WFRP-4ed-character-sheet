@@ -23,7 +23,13 @@ class DiceRoller {
     if (this.isDieSizeTooSmall(dieSize)) {
       return -1;
     }
-    return Math.floor(Math.random() * dieSize);
+    return this.getRandomInt(1, dieSize);
+  }
+
+  getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 }
 

@@ -33,6 +33,18 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    &:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 100;
+      pointer-events: none;
+      box-shadow: inset 0 0 150px -30px rgb(110, 20, 29);
+    }
   }
 
   .route-fade-enter-active {
