@@ -4,7 +4,7 @@
       <div class="main-content-wrapper">
         <transition name="step-change-fade" appear mode="out-in">
           <keep-alive>
-            <component :is="currentStep" @next-step="nextStep" v-model="characterSheet.species"
+            <component :is="currentStep" @next-step="nextStep"
                        @update-info="updateInfo"></component>
           </keep-alive>
         </transition>
@@ -17,33 +17,35 @@
       </transition>
     </div>
     <div class="step-tracker-wrapper">
-      <p>creator step tracker</p>
-      <button @click="nextStep">Next step</button>
+      <StepsTracker :currentStep="currentStep" :allSteps="allSteps" @selected-step="selectStep"></StepsTracker>
     </div>
   </div>
 </template>
 
 <script>
 import Species from './steps/Species.vue';
+import Career from './steps/career/Career.vue';
 import Name from './steps/Name.vue';
+import StepsTracker from './StepsTracker.vue';
 
 export default {
   name: 'creator',
+  components: {StepsTracker},
   data() {
     return {
       currentStep: Species,
-      allSteps: [Species, Name],
+      allSteps: [Species, Career, Name],
       currentInfo: '',
-      characterSheet: {
-        species: '',
-      },
     };
   },
   methods: {
     nextStep() {
       const currentStepIndex = this.allSteps.indexOf(this.currentStep);
       const nextStepIndex = currentStepIndex + 1;
-      this.currentStep = this.allSteps[nextStepIndex % this.allSteps.length];
+      this.selectStep(this.allSteps[nextStepIndex % this.allSteps.length]);
+    },
+    selectStep(step) {
+      this.currentStep = step;
       this.currentInfo = '';
     },
     updateInfo(newInfo) {

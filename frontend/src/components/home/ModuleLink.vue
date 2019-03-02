@@ -1,16 +1,16 @@
 <template>
   <router-link :to="to">
     <div class="wrapper">
-        <slot>Go to {{to}}</slot>
+      <slot>Go to {{to}}</slot>
     </div>
   </router-link>
 </template>
 
 <script>
-  export default {
-    name: 'moduleLink',
-    props: ['to'],
-  };
+export default {
+  name: 'moduleLink',
+  props: ['to'],
+};
 </script>
 
 <style lang="scss" scoped>

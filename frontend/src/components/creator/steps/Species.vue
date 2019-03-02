@@ -5,26 +5,28 @@
       <button @click="selectSpecies(raceName)"
               @mouseover="updateInfo(raceData.info)"
               v-bind:key="raceName"
-              v-for="(raceData, raceName) in species"
+              v-for="(raceData, raceName) in availableSpecies"
               v-bind:class="{selected: currentSpecies.name === raceData.name}">
         {{raceData.name}}
       </button>
     </div>
     <h2>or roll a die and let the destiny make the choice for you:</h2>
     <div class="species-roll-wrapper">
-      <button @click="rollSpeciesContinuously(80)" @mouseover="updateInfo(rollSpeciesInfo)">Roll</button>
+      <button @click="rollSpeciesContinuously(80)" @mouseover="updateInfo(rollSpeciesInfo)">
+        Roll
+      </button>
       <h3>{{rollStatus}}</h3>
     </div>
     <div class="species-confirmation-wrapper">
-      <button @click="confirmSpeciesSelection()" :disabled="currentSpeciesNotSelected">
+      <button @click="confirmSpeciesSelection()" :disabled="currentSpeciesNotSelected || rolling">
         I want to be a {{currentSpecies.name || '...'}}
       </button>
     </div>
   </div>
 </template>
-
 <script>
-import species from './species.json';
+import { mapState, mapMutations } from 'vuex';
+import availableSpecies from './species.json';
 import roller from '../../dice/roller';
 
 const rollSpeciesInfo = `
@@ -59,25 +61,32 @@ export default {
   data() {
     return {
       currentSpecies: {},
-      species,
+      availableSpecies,
       rollSpeciesInfo,
       rollStatus: '',
       maxRollTime: 100,
       minRollTime: 10,
+      rolling: false,
     };
   },
   computed: {
     currentSpeciesNotSelected() {
       return Object.keys(this.currentSpecies).length === 0;
     },
+    rollDuration() {
+      return this.maxRollTime - this.minRollTime;
+    },
+    ...mapState({
+      species: state => state.characterSheet.species,
+    }),
   },
   methods: {
     selectSpecies(selectedSpecies) {
-      this.currentSpecies = this.species[selectedSpecies];
+      this.currentSpecies = this.availableSpecies[selectedSpecies];
     },
     confirmSpeciesSelection() {
       if (!this.currentSpeciesNotSelected) {
-        this.$emit('input', this.currentSpecies);
+        this.setSpecies(this.currentSpecies);
         this.$emit('next-step');
       }
     },
@@ -93,19 +102,22 @@ export default {
       this.updateInfo(this.currentSpecies.info);
     },
     computeCurrentRollInterval(rollsLeft, totalRolls) {
-      return this.minRollTime + (this.maxRollTime - this.minRollTime) * (totalRolls - rollsLeft) / totalRolls;
+      return this.minRollTime + this.rollDuration * (totalRolls - rollsLeft) / totalRolls;
     },
     rollSpeciesOnceRecursive(rollsLeft, totalRolls) {
       if (rollsLeft > 0) {
         this.rollSpeciesOnce();
         setTimeout(() => {
-          this.rollSpeciesOnceRecursive(--rollsLeft, totalRolls);
+          const updatedRollsLeft = rollsLeft - 1;
+          this.rollSpeciesOnceRecursive(updatedRollsLeft, totalRolls);
         }, this.computeCurrentRollInterval(rollsLeft, totalRolls));
+      } else {
+        this.rolling = false;
       }
     },
     rollSpeciesContinuously(times) {
+      this.rolling = true;
       this.rollSpeciesOnceRecursive(times, times);
-      this.updateInfo(this.currentSpecies.info);
     },
     selectSpeciesFromRoll(roll) {
       if (roll === 100) {
@@ -122,9 +134,11 @@ export default {
       }
       return 'dwarf';
     },
+    ...mapMutations(['setSpecies']),
   },
 };
 </script>
+
 
 <style lang="scss" scoped>
   .species-wrapper {
